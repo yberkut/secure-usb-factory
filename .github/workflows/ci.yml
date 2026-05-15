@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Sync dependencies
+        run: uv sync --extra dev --extra lint --extra build --index-url https://pypi.org/simple
+
+      - name: Lint
+        run: uv run --extra lint ruff check .
+
+      - name: Test
+        run: uv run --extra dev pytest -q
+
+      - name: Compile
+        run: uv run python tools/compile_check.py
+
+      - name: Package sanity
+        run: |
+          uv run --extra build python tools/package.py
+          uv run python tools/package_sanity.py

@@ -1,0 +1,16 @@
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# local type-checker/cache metadata
+.mypy_cache/
+
+# local destructive E2E scenario configuration
+tests/e2e/e2e.env
+
+.idea/

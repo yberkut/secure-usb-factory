@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "secure-usb-factory"
+version = "1.0.0"
+description = "Secure USB Factory"
+requires-python = ">=3.11"
+dependencies = [
+  "rich>=15.0.0,<16",
+  "shellingham>=1.5.4,<2",
+  "typer>=0.25.1,<0.26",
+  "typing-extensions>=4.15.0,<5",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=9.0.3,<10",
+  "pexpect>=4.9.0,<5",
+]
+lint = [
+  "ruff>=0.15.12,<0.16",
+  "black>=26.3.1,<27",
+]
+build = [
+  "pyinstaller>=6.20.0,<7",
+]
+
+[project.scripts]
+stick = "stick.cli:main"
+vault = "vault.cli:main"
+wipe = "wipe.cli:main"
+forge = "forge.cli:main"
+
+[tool.setuptools.packages.find]
+where = [
+  "src",
+  "packages/usb_shared/src",
+  "packages/usb_linux/src",
+  "packages/usb_stick/src",
+  "packages/usb_vault/src",
+  "packages/usb_wipe/src",
+  "packages/usb_forge/src",
+]
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+
+[tool.uv]
+package = true

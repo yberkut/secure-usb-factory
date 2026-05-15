@@ -1,0 +1,308 @@
+[artifacts]
+output_dir = "build/scripts"
+include_manifest = true
+# none = leave the generated artifact as a directory
+# zip = also write an archive of the complete generated artifact
+archive_format = "none"
+
+[package]
+# tree = copy .py package directories into lib/ (best for inspection)
+# executable = build one PyInstaller runtime in lib/ and point scripts at it
+lib_layout = "tree"
+# CLI entrypoints built by make package.
+tools = ["stick", "vault", "wipe", "forge"]
+
+
+[sticks.green]
+device_path = "/dev/disk/by-id/<DEVICE_ID>"
+purpose = "working stick"
+
+[sticks.green.vaults.personal]
+size = "256M"
+purpose = "personal data"
+
+[sticks.green.vaults.work]
+size = "256M"
+purpose = "work data"
+
+[forge.scripts.green-stick-wipe-fast]
+type = "atomic"
+disabled = false
+tool = "wipe"
+command = "stick"
+help = "Fast wipe the configured green stick for reuse."
+stick_id = "green"
+fixed_args = ["--fast"]
+
+[forge.scripts.green-stick-wipe-full]
+type = "atomic"
+disabled = false
+tool = "wipe"
+command = "stick"
+help = "Fully overwrite the configured green stick."
+stick_id = "green"
+fixed_args = ["--full"]
+
+[forge.scripts.green-stick-create]
+type = "atomic"
+disabled = false
+tool = "stick"
+command = "create"
+help = "Create the configured green stick."
+stick_id = "green"
+
+[forge.scripts.green-stick-create-check]
+type = "atomic"
+disabled = false
+tool = "stick"
+command = "create"
+help = "Check whether the configured green stick is ready for provisioning."
+stick_id = "green"
+fixed_args = ["--status"]
+
+[forge.scripts.green-stick-mount]
+type = "atomic"
+disabled = false
+tool = "stick"
+command = "mount"
+help = "Mount the configured green stick."
+stick_id = "green"
+
+[forge.scripts.green-stick-mount-check]
+type = "atomic"
+disabled = false
+tool = "stick"
+command = "mount"
+help = "Show current runtime state for the configured green stick."
+stick_id = "green"
+fixed_args = ["--status"]
+
+[forge.scripts.green-stick-unmount]
+type = "atomic"
+disabled = false
+tool = "stick"
+command = "unmount"
+help = "Unmount the configured green stick."
+stick_id = "green"
+
+[forge.scripts.green-vault-personal-create]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "create"
+help = "Create personal vault on the configured green stick."
+stick_id = "green"
+vault = "personal"
+
+[forge.scripts.green-vault-personal-mount]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "mount"
+help = "Mount personal on the configured green stick."
+stick_id = "green"
+vault = "personal"
+
+[forge.scripts.green-vault-personal-mount-keepass]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "mount"
+help = "Mount personal on the configured green stick with KeePass helper flow."
+stick_id = "green"
+vault = "personal"
+fixed_args = ["--keepass"]
+
+[forge.scripts.green-vault-personal-unmount]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "unmount"
+help = "Unmount personal on the configured green stick."
+stick_id = "green"
+vault = "personal"
+
+[forge.scripts.green-vault-personal-wipe]
+type = "atomic"
+disabled = false
+tool = "wipe"
+command = "vault"
+help = "Wipe the personal vault directory on the configured green stick."
+stick_id = "green"
+vault = "personal"
+
+[forge.scripts.green-vault-personal-mount-check]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "mount"
+help = "Show green plus personal runtime state."
+stick_id = "green"
+vault = "personal"
+fixed_args = ["--status"]
+
+[forge.scripts.green-vault-personal-create-check]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "create"
+help = "Check readiness for creating personal on the configured green stick."
+stick_id = "green"
+vault = "personal"
+fixed_args = ["--status"]
+
+[forge.scripts.green-vault-personal-wipe-check]
+type = "atomic"
+disabled = false
+tool = "wipe"
+command = "vault"
+help = "Inspect readiness for wiping the personal vault directory on the configured green stick."
+stick_id = "green"
+vault = "personal"
+fixed_args = ["--status"]
+
+[forge.scripts.green-vault-personal-open-session]
+type = "scenario"
+disabled = false
+help = "Mount the green stick, then mount the personal vault."
+stop_on_error = true
+steps = [
+  { kind = "cli", tool = "stick", command = ["mount"], stick_id = "green" },
+  { kind = "cli", tool = "vault", command = ["mount"], stick_id = "green", vault = "personal" },
+]
+
+[forge.scripts.green-vault-work-create]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "create"
+help = "Create work vault on the configured green stick."
+stick_id = "green"
+vault = "work"
+
+[forge.scripts.green-vault-work-mount]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "mount"
+help = "Mount work on the configured green stick."
+stick_id = "green"
+vault = "work"
+
+[forge.scripts.green-vault-work-mount-keepass]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "mount"
+help = "Mount work on the configured green stick with KeePass helper flow."
+stick_id = "green"
+vault = "work"
+fixed_args = ["--keepass"]
+
+[forge.scripts.green-vault-work-unmount]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "unmount"
+help = "Unmount work on the configured green stick."
+stick_id = "green"
+vault = "work"
+
+[forge.scripts.green-vault-work-wipe]
+type = "atomic"
+disabled = false
+tool = "wipe"
+command = "vault"
+help = "Wipe the work vault directory on the configured green stick."
+stick_id = "green"
+vault = "work"
+
+[forge.scripts.green-vault-work-mount-check]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "mount"
+help = "Show green plus work runtime state."
+stick_id = "green"
+vault = "work"
+fixed_args = ["--status"]
+
+[forge.scripts.green-vault-work-create-check]
+type = "atomic"
+disabled = false
+tool = "vault"
+command = "create"
+help = "Check readiness for creating work on the configured green stick."
+stick_id = "green"
+vault = "work"
+fixed_args = ["--status"]
+
+[forge.scripts.green-vault-work-wipe-check]
+type = "atomic"
+disabled = false
+tool = "wipe"
+command = "vault"
+help = "Inspect readiness for wiping the work vault directory on the configured green stick."
+stick_id = "green"
+vault = "work"
+fixed_args = ["--status"]
+
+[forge.scripts.green-vault-work-open-session]
+type = "scenario"
+disabled = false
+help = "Mount the green stick, then mount the work vault."
+stop_on_error = true
+steps = [
+  { kind = "cli", tool = "stick", command = ["mount"], stick_id = "green" },
+  { kind = "cli", tool = "vault", command = ["mount"], stick_id = "green", vault = "work" },
+]
+
+[forge.scripts.green-vault-work-panic-wipe-fast]
+type = "atomic"
+disabled = false
+tool = "wipe"
+command = "vault"
+help = "Panic-wipe the work vault container without confirmation. Use only when immediate destruction is required."
+stick_id = "green"
+vault = "work"
+fixed_args = ["--fast", "--panic", "-V"]
+
+[forge.scripts.green-vault-personal-panic-wipe-fast]
+type = "atomic"
+disabled = false
+tool = "wipe"
+command = "vault"
+help = "Panic-wipe the personal vault container without confirmation. Use only when immediate destruction is required."
+stick_id = "green"
+vault = "personal"
+fixed_args = ["--fast", "--panic", "-V"]
+
+[forge.scripts.green-stick-panic-wipe-fast]
+type = "atomic"
+disabled = false
+tool = "wipe"
+command = "stick"
+help = "Panic-wipe the configured green stick without confirmation. Use only when immediate destruction is required."
+stick_id = "green"
+fixed_args = ["--fast", "--panic", "-V"]
+
+[forge.scripts.green-panic-destroy-all-fast]
+type = "scenario"
+disabled = false
+help = "Panic-destroy the personal and work vaults if present or mounted, then panic-wipe the configured green stick. No confirmation prompts."
+stop_on_error = true
+steps = [
+  { kind = "cli", tool = "wipe", command = ["vault"], stick_id = "green", vault = "personal", fixed_args = ["--fast", "--panic", "-V"] },
+  { kind = "cli", tool = "wipe", command = ["vault"], stick_id = "green", vault = "work", fixed_args = ["--fast", "--panic", "-V"] },
+  { kind = "cli", tool = "wipe", command = ["stick"], stick_id = "green", fixed_args = ["--fast", "--panic", "-V"] },
+]
+
+[forge.scripts.green-stick-recreate-with-confirmation]
+type = "scenario"
+disabled = false
+help = "Recreate the configured green stick by first wiping existing partition data with confirmation, then creating a fresh encrypted stick."
+stop_on_error = true
+steps = [
+  { kind = "cli", tool = "wipe", command = ["stick"], stick_id = "green", fixed_args = ["--fast", "-V"] },
+  { kind = "cli", tool = "stick", command = ["create"], stick_id = "green", fixed_args = ["-V"] },
+]
