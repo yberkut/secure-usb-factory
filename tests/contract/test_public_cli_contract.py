@@ -4,6 +4,8 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
+from tests.support.cli_output import assert_cli_contains
+
 from forge.cli import app as forge_app
 from stick.cli import app as stick_app
 from vault.cli import app as vault_app
@@ -45,14 +47,14 @@ def test_current_public_cli_help_contract() -> None:
     for command_name, app in PUBLIC_APPS:
         result = runner.invoke(app, ["--help"])
         assert result.exit_code == 0
-        assert f"Usage: {command_name}" in result.stdout
+        assert_cli_contains(result.stdout, f"Usage: {command_name}")
 
 
 def test_current_public_cli_short_help_alias_contract() -> None:
     for command_name, app in PUBLIC_APPS:
         result = runner.invoke(app, ["-h"])
         assert result.exit_code == 0
-        assert f"Usage: {command_name}" in result.stdout
+        assert_cli_contains(result.stdout, f"Usage: {command_name}")
 
 
 def test_current_public_cli_version_contract() -> None:

@@ -4,6 +4,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from tests.support.cli_output import assert_cli_contains, normalized_cli_output
 
 ROOT = Path(__file__).resolve().parents[2]
 PYTHONPATH = os.pathsep.join(
@@ -51,20 +52,20 @@ def test_module_entrypoint_version_is_fast() -> None:
 def test_module_entrypoint_help_is_fast_and_useful() -> None:
     result = run_module("stick.cli", "--help")
     assert result.returncode == 0, result.stderr
-    assert "Usage: stick" in result.stdout
-    assert "Commands" in result.stdout
+    assert_cli_contains(result.stdout, "Usage: stick")
+    assert_cli_contains(result.stdout, "Commands")
     
 
 def test_module_entrypoint_help_exposes_typer_completion_options() -> None:
     result = run_module("stick.cli", "--help")
     assert result.returncode == 0, result.stderr
-    assert "--show-completion" in result.stdout
-    assert "--install-completion" in result.stdout
+    assert_cli_contains(result.stdout, "--show-completion")
+    assert_cli_contains(result.stdout, "--install-completion")
 
 
 def test_module_entrypoint_help_renders_rich_markup() -> None:
     result = run_module("forge.cli", "--help")
     assert result.returncode == 0, result.stderr
-    assert "Forge" in result.stdout
-    assert "[bold yellow]" not in result.stdout
-    assert "[/bold yellow]" not in result.stdout
+    assert_cli_contains(result.stdout, "Forge")
+    assert "[bold yellow]" not in normalized_cli_output(result.stdout)
+    assert "[/bold yellow]" not in normalized_cli_output(result.stdout)

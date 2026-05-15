@@ -4,6 +4,8 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
+from tests.support.cli_output import assert_cli_contains
+
 from forge.cli import app as forge_app
 from stick.cli import app as stick_app
 from vault.cli import app as vault_app
@@ -32,9 +34,9 @@ def test_current_command_help_shapes() -> None:
     for app, command, expected_fragments in COMMAND_HELP_CASES:
         result = runner.invoke(app, [*command, "--help"])
         assert result.exit_code == 0, result.output
-        assert "Usage:" in result.output
+        assert_cli_contains(result.output, "Usage:")
         for fragment in expected_fragments:
-            assert fragment in result.output
+            assert_cli_contains(result.output, fragment)
 
 
 def test_dry_run_and_manual_paths_are_non_interactive(tmp_path: Path) -> None:
@@ -100,15 +102,15 @@ def test_dry_run_and_manual_paths_are_non_interactive(tmp_path: Path) -> None:
 def test_wipe_stick_mode_validation_contract() -> None:
     no_mode = runner.invoke(wipe_app, ["stick", "--path", "/dev/not-a-real-device"])
     assert no_mode.exit_code != 0
-    assert "Choose exactly one of --fast or --full" in no_mode.output
+    assert_cli_contains(no_mode.output, "Choose exactly one of --fast or --full")
 
     both_modes = runner.invoke(
         wipe_app,
         ["stick", "--path", "/dev/not-a-real-device", "--fast", "--full"],
     )
     assert both_modes.exit_code != 0
-    assert "Choose exactly one of --fast or --full" in both_modes.output
+    assert_cli_contains(both_modes.output, "Choose exactly one of --fast or --full")
 
     status_without_mode = runner.invoke(wipe_app, ["stick", "--path", "/dev/not-a-real-device", "--status"])
     assert status_without_mode.exit_code == 0
-    assert "Wipe stick status:" in status_without_mode.output
+    assert_cli_contains(status_without_mode.output, "Wipe stick status:")

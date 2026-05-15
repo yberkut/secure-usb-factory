@@ -4,6 +4,8 @@ from pathlib import Path
 
 from typer.testing import CliRunner
 
+from tests.support.cli_output import assert_cli_contains
+
 from forge.cli import app as forge_app
 from stick.cli import app as stick_app
 from vault.cli import app as vault_app
@@ -35,7 +37,7 @@ def test_public_cli_contract_names_match_live_roots() -> None:
         assert f"`{name}`" in text
         result = runner.invoke(app, ["--help"])
         assert result.exit_code == 0, result.output
-        assert f"Usage: {name}" in result.output
+        assert_cli_contains(result.output, f"Usage: {name}")
 
 
 def test_public_cli_contract_command_shapes_exist_in_help() -> None:
@@ -47,7 +49,7 @@ def test_public_cli_contract_command_shapes_exist_in_help() -> None:
             assert f"{tool} {command}" in text
             result = runner.invoke(apps[tool], [command, "--help"])
             assert result.exit_code == 0, result.output
-            assert "Usage:" in result.output
+            assert_cli_contains(result.output, "Usage:")
 
 
 def test_new_examples_prefer_media_id_over_stick_id() -> None:

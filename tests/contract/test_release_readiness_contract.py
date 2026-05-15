@@ -15,6 +15,7 @@ from usb_shared.config.schema import (
     SufConfig,
 )
 from usb_shared.errors import ValidationError
+from tests.support.cli_output import normalized_cli_output
 
 ROOT = Path(__file__).resolve().parents[2]
 ACTIVE_DOCS = [ROOT / "README.md", *(ROOT / "docs").glob("*.md"), *((ROOT / "docs" / "runtime").glob("*.md")), *((ROOT / "docs" / "scenarios").glob("*.md"))]
@@ -40,7 +41,7 @@ def test_fast_help_and_forge_help_use_script_language() -> None:
     result = CliRunner().invoke(forge_app, ["--help"])
     assert result.exit_code == 0
     assert "script and artifact composition" in result.stdout.lower()
-    assert "[bold yellow]" not in result.stdout
+    assert "[bold yellow]" not in normalized_cli_output(result.stdout)
 
 
 def test_public_script_validation_errors_do_not_say_wrapper() -> None:

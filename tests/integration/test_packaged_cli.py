@@ -3,11 +3,12 @@ from __future__ import annotations
 import subprocess
 
 from tests.integration.package_support import PACKAGE, ROOT, run
+from tests.support.cli_output import assert_cli_contains, normalized_cli_output
 
 
 def test_packaged_stick_help_works(packaged_tree: None) -> None:
     help_result = run([str(PACKAGE / "bin" / "stick"), "--help"])
-    assert "Usage: stick" in help_result.stdout
+    assert_cli_contains(help_result.stdout, "Usage: stick")
 
 
 def test_packaged_scripts_delegate_completion_to_typer(packaged_tree: None) -> None:
@@ -16,8 +17,8 @@ def test_packaged_scripts_delegate_completion_to_typer(packaged_tree: None) -> N
     assert "--show-completion" not in text
     assert "--install-completion" not in text
     help_result = run([str(script), "--help"])
-    assert "--show-completion" in help_result.stdout
-    assert "--install-completion" in help_result.stdout
+    assert_cli_contains(help_result.stdout, "--show-completion")
+    assert_cli_contains(help_result.stdout, "--install-completion")
 
 
 def test_packaged_tool_versions_work(packaged_tree: None) -> None:
@@ -28,9 +29,9 @@ def test_packaged_tool_versions_work(packaged_tree: None) -> None:
 
 def test_packaged_forge_help_renders_rich_markup(packaged_tree: None) -> None:
     result = run([str(PACKAGE / "bin" / "forge"), "--help"])
-    assert "Forge" in result.stdout
-    assert "[bold yellow]" not in result.stdout
-    assert "[/bold yellow]" not in result.stdout
+    assert_cli_contains(result.stdout, "Forge")
+    assert "[bold yellow]" not in normalized_cli_output(result.stdout)
+    assert "[/bold yellow]" not in normalized_cli_output(result.stdout)
 
 
 
