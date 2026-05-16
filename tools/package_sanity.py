@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import re
 import tomllib
 import subprocess
 import sys
@@ -13,6 +14,14 @@ PACKAGE = ROOT / "dist" / "suf"
 DEFAULT_PACKAGE_TOOLS = ["stick", "vault", "wipe", "forge"]
 VERSION_FILE = ROOT / "packages/usb_shared/src/usb_shared/version.py"
 CONFIG_PATH = ROOT / "suf.toml"
+
+ANSI_RE = re.compile(r"\x1b(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+WHITESPACE_RE = re.compile(r"\s+")
+
+
+def normalized_cli_output(text: str) -> str:
+    """Return CLI output with ANSI styling removed and whitespace made stable."""
+    return WHITESPACE_RE.sub(" ", ANSI_RE.sub("", text)).strip()
 
 
 def project_version() -> str:
@@ -130,8 +139,13 @@ def main() -> int:
     )
     if result.returncode != 0:
         return fail(f"Packaged {help_tool} --help failed:\n" + result.stderr)
-    if f"Usage: {help_tool}" not in result.stdout:
-        return fail(f"Packaged {help_tool} --help did not show expected usage")
+    normalized_help = normalized_cli_output(result.stdout)
+    if f"Usage: {help_tool}" not in normalized_help:
+        return fail(
+            f"Packaged {help_tool} --help did not show expected usage\n"
+            f"Expected: Usage: {help_tool}\n"
+            f"Output: {normalized_help}"
+        )
 
     print("Package sanity: OK")
     return 0
