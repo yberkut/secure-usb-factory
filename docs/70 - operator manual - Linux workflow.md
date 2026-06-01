@@ -16,7 +16,7 @@ tags:
 ```bash
 stick mount --id green --path /dev/disk/by-id/<DEVICE_ID>
 vault mount --media-id green --mount /media/green-stick --vault personal
-vault unmount --media-id green --mount /media/green-stick --vault personal
+vault unmount --media-id green --vault personal
 stick unmount --id green
 ```
 
